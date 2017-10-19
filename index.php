@@ -19,15 +19,12 @@
 	
 	$affichage = "<table class='table-striped table-bordered table'>";
 
-	echo $req;
-	echo "<br>";
-
 	$con = new mysqli($adress, $user, $pwd, $dbname);
 
 	if ($con->connect_error) {
 	    die("Connection failed: " . $con->connect_error);
 	} 
-	echo "Connected successfully <br>";
+	//echo "Connected successfully <br>";
 	if ($req != "")
 	{
 		$result = $con->query($req);
@@ -53,9 +50,6 @@
 				$affichage .= "</tr>";
 			}
 			$affichage .= "</table>";
-		}
-		if ($error != ""){
-			echo $error;
 		}
 	}
 ?>
@@ -86,7 +80,15 @@
 			<div id="resultat">
 				<!-- afficher la variable affichage de php -->
 				<?php 
-				echo $affichage;
+				if ($error != "")
+				{
+					echo $error;
+				}
+				else
+				{
+					echo $affichage;
+				}
+			
 				?>
 			</div>
 		</div>
