@@ -4,29 +4,55 @@
 	$pwd = "DentegoRep2017";
 	$dbname = "dentegoreporting";
 	
-	$req = $_POST["req"];
-	$affichage = "";
+	if (isset($_POST["req"]) == FALSE)
+	{
+		$req = "";
+		$text = "<textarea rows=10 cols=100 id='req' name='req'>Entrez votre requête ici</textarea><br/>";
+	}
+	else {
+		$req = $_POST["req"];
+		$text = "<textarea rows=10 cols=100 id='req'' name='req''>";
+		$text .= $req;
+		$text .= "</textarea><br/>";
+	}
+	
+	$affichage = "<table>";
+
+	echo $req;
+	echo "<br>";
 
 	$con = new mysqli($adress, $user, $pwd, $dbname);
 
 	if ($con->connect_error) {
 	    die("Connection failed: " . $con->connect_error);
 	} 
-	echo "Connected successfully";
-	$result = $con->query($req);
-	if (!$result) 
+	echo "Connected successfully <br>";
+	if ($req != "")
 	{
-	    die('Requête invalide : ' . mysql_error());
+		$result = $con->query($req);
+		if (!$result) 
+		{
+		    die('Requête invalide : ' . mysql_error());
+		}
+		else 
+		{
+			$count = 1;
+			while ($row = mysqli_fetch_assoc($result))
+			{
+				$affichage .= "<tr>";
+				$affichage .= "<td>";
+				$affichage .= $count;
+				$count++;
+				foreach ($row as $key => $value) {
+					$affichage .= "<td>";
+					$affichage .= $value;
+				}
+				$affichage .= "</tr>";
+			}
+			$affichage .= "</table>";
+		}	
+		$result->close();
 	}
-	else 
-	{
-		//faire une boucle sur les lignes du resultat de la requete avec mysqli_fetch_row
-		//pour chaque ligne tu fait un mysqli_fetch_array qui va recupérer la ligne sous forme de tableau
-		//ensuite concatener la chaine $affichage avec les colonnes du tableau en les séparant par des ;
-	}	
-
-	$result->close();
-
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +68,10 @@
 			<form action="index.php" method="post">
 				<div id="requete">
 					<h2> Voici la page de lien vers la base de données</h2>
-					<textarea rows=10 cols=100 id="req" name="req">Entrez votre requête ici</textarea><br/>
+					<!--<textarea rows=10 cols=100 id="req" name="req">Entrez votre requête ici</textarea><br/>-->
+					<?php
+					echo $text;
+					?>
 					<button class="btn" type="submit">Valider</button>
 				</div>
 			</form>
@@ -50,6 +79,9 @@
 
 			<div id="resultat">
 				<!-- afficher la variable affichage de php -->
+				<?php 
+				echo $affichage;
+				?>
 			</div>
 		</div>
 	</body>
