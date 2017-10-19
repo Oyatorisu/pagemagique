@@ -3,6 +3,7 @@
 	$user = "DentegoRep";
 	$pwd = "DentegoRep2017";
 	$dbname = "dentegoreporting";
+	$error ="";
 	
 	if (isset($_POST["req"]) == FALSE)
 	{
@@ -16,7 +17,7 @@
 		$text .= "</textarea><br/>";
 	}
 	
-	$affichage = "<table>";
+	$affichage = "<table class='table-striped table-bordered table'>";
 
 	echo $req;
 	echo "<br>";
@@ -32,7 +33,9 @@
 		$result = $con->query($req);
 		if (!$result) 
 		{
-		    die('Requête invalide : ' . mysql_error());
+			$error = mysqli_error($con);
+			mysqli_close($con);
+		    //die('Requête invalide : ' . mysql_error());
 		}
 		else 
 		{
@@ -50,8 +53,10 @@
 				$affichage .= "</tr>";
 			}
 			$affichage .= "</table>";
-		}	
-		$result->close();
+		}
+		if ($error != ""){
+			echo $error;
+		}
 	}
 ?>
 
@@ -59,6 +64,7 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+		<!--<link rel="stylesheet" href="style.css">-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 		<meta charset="UTF-8" />
 		<title>Page magique</title>
